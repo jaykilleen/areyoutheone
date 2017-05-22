@@ -10,10 +10,42 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170521110046) do
+ActiveRecord::Schema.define(version: 20170521120237) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "couples", force: :cascade do |t|
+    t.integer "first_character_id"
+    t.integer "second_character_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "episodes", force: :cascade do |t|
+    t.bigint "season_id"
+    t.string "result"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["season_id"], name: "index_episodes_on_season_id"
+  end
+
+  create_table "guesses", force: :cascade do |t|
+    t.bigint "episode_id"
+    t.string "result"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["episode_id"], name: "index_guesses_on_episode_id"
+  end
+
+  create_table "seasons", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "result"
+    t.integer "prize"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_seasons_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email"
@@ -21,4 +53,7 @@ ActiveRecord::Schema.define(version: 20170521110046) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "episodes", "seasons"
+  add_foreign_key "guesses", "episodes"
+  add_foreign_key "seasons", "users"
 end
